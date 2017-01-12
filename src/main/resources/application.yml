@@ -2,7 +2,7 @@ spring:
   datasource:
     url: jdbc:mysql://localhost/gaia
     username: root
-    password:
+    password: Passw0rd!
     driver-class-name: com.mysql.jdbc.Driver
   aop:
     auto: true
@@ -35,7 +35,8 @@ gaia:
     allow_public_access: true
 
 server:
-  port: 8080
+  port: 8090
+  address: localhost
   context-path: /gaia/rest
 
 ---
