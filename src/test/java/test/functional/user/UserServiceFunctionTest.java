@@ -4,7 +4,6 @@ import com.thoughtworks.gaia.GaiaApplication;
 import com.thoughtworks.gaia.common.constant.EnvProfile;
 import com.thoughtworks.gaia.common.exception.NotFoundException;
 import com.thoughtworks.gaia.user.dao.UserDao;
-import com.thoughtworks.gaia.user.entity.User;
 import com.thoughtworks.gaia.user.service.UserService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
