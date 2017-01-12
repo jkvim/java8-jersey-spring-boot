@@ -37,22 +37,17 @@ public class UserServiceFunctionTest {
     @Test(expected = NotFoundException.class)
     public void should_user_notexists_function_when_given_1() {
         //given
-        long num = -1;
         //when
-
         //then
-        userService.getUser(num);
+        userService.getUser((long) -1);
     }
 
 
     @Test
     public void should_user_exists_function_when_given_1() {
         //given
-        long num = 1;
         //when
-        User user = new UserService().getUser(num);
-
         //then
-        assertThat(user.getId()).isEqualTo(num);
+        assertThat(new UserService().getUser((long) 1).getId()).isEqualTo((long) 1);
     }
 }
