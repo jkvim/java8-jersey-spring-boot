@@ -38,10 +38,9 @@ public class ExamServiceFunctionalTest {
     @Test
     public  void  should_exam_notexists_function_when_given_1() {
         //given
-        long num = 1;
 
         //when
-        Exam obj =  examService.getExam(num);
+        Exam obj =  examService.getExam((long) 1);
         //then
         assertEquals("",obj,new Object());
     }
@@ -50,10 +49,9 @@ public class ExamServiceFunctionalTest {
     @Test
     public  void should_exam_exists_function_when_given_1(){
         //given
-        long num = 2;
 
         //when
-        Exam exm = examService.getExam(num);
+        Exam exm = examService.getExam((long) 2);
 
         //then
         assertEquals("",exm,null);
