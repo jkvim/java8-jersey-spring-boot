@@ -3,7 +3,7 @@ CREATE TABLE `user` (
   `email` varchar(64) NOT NULL,
   `password` varchar(24) NOT NULL,
   `name` varchar(64) NULL,
-  `gender` bit,
+  `gender` bit NOT NULL,
   `tel` varchar(11) NULL,
   `school` varchar(64) NULL,
   `major` varchar(64) NULL,
