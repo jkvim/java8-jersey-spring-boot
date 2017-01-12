@@ -2,6 +2,7 @@ package test.functional.exam;
 
 import com.thoughtworks.gaia.GaiaApplication;
 import com.thoughtworks.gaia.common.constant.EnvProfile;
+import com.thoughtworks.gaia.common.exception.NotFoundException;
 import com.thoughtworks.gaia.exam.dao.ExamDao;
 import com.thoughtworks.gaia.exam.entity.Exam;
 import com.thoughtworks.gaia.exam.service.ExamService;
@@ -35,12 +36,9 @@ public class ExamServiceFunctionalTest {
     @Autowired
     private ExamDao examDao;
 
-    @Test
-    public  void  should_exam_notexists_function_when_given_1() {
-        //given
-        //when
-        //then
-        assertEquals("", examService.getExam((long) 1),new Object());
+    @Test(expected = NotFoundException.class)
+    public void should_exam_notexists_function_when_given_1() {
+        examService.getExam(1L);
     }
 
 
@@ -51,5 +49,4 @@ public class ExamServiceFunctionalTest {
         //then
         assertEquals("", examService.getExam((long) 2),null);
     }
-
 }

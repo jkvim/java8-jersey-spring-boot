@@ -21,10 +21,10 @@ public class ExamService implements Loggable {
 
     public Exam getExam(Long examId) {
         ExamModel examModel = examDao.idEquals(examId).querySingle();
-//        if (examModel == null) {
-//            error("Exam not found with id: " + examId);
-//            throw new NotFoundException();
-//        }
+        if (examModel == null) {
+            error("Exam not found with id: " + examId);
+            throw new NotFoundException();
+        }
 
         return mapper.map(examModel, Exam.class);
     }
