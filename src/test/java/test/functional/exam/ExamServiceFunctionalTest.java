@@ -38,23 +38,18 @@ public class ExamServiceFunctionalTest {
     @Test
     public  void  should_exam_notexists_function_when_given_1() {
         //given
-
         //when
-        Exam obj =  examService.getExam((long) 1);
         //then
-        assertEquals("",obj,new Object());
+        assertEquals("", examService.getExam((long) 1),new Object());
     }
 
 
     @Test
     public  void should_exam_exists_function_when_given_1(){
         //given
-
         //when
-        Exam exm = examService.getExam((long) 2);
-
         //then
-        assertEquals("",exm,null);
+        assertEquals("", examService.getExam((long) 2),null);
     }
 
 }
