@@ -41,15 +41,13 @@ public class UserServiceFunctionTest {
 
     @Autowired
     private UserDao userDao;
-    private UserDao userDao1;
 
     @Test(expected = NotFoundException.class)
     public void should_user_notexists_when_given_1() {
         //given
         //when
         //then
-        User userModel =  userService.getUser((long) -1);
-        String username = userModel.getName();
+        userService.getUser((long) -1);
     }
 
     @Test
@@ -66,7 +64,7 @@ public class UserServiceFunctionTest {
         usermodel.setTel("11111111111");
         usermodel.setTimeCreated(DateTime.now().toDate());
         userDao.save(usermodel);
-        long userid =usermodel.getId();
+        long userid = usermodel.getId();
         long newuserid = userService.getUser(userid).getId();
         //when
         //then

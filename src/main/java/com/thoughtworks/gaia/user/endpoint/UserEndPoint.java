@@ -24,7 +24,7 @@ public class UserEndPoint {
     @Autowired
     private UserService userService;
 
-    @Path("/{user_id}")
+    @Path("/{user_id}/profile")
     @ApiOperation(value = "Get user by id", response = User.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Get user successfully"),
@@ -33,7 +33,13 @@ public class UserEndPoint {
 
     @GET
     public Response getUser(@PathParam("user_id") Long userId) {
-        return Response.ok().entity(userService.getUser(userId)).build();
+        try{
+            User user = userService.getUser(userId);
+            return Response.ok().entity(user).build();
+        }
+        catch (com.thoughtworks.gaia.common.exception.NotFoundException ex) {
+            return Response.ok().entity("User Not Found!").build();
+        }
     }
 
     @Path("/{user_id}/profile")

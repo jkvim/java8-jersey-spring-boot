@@ -57,12 +57,9 @@ public class ExamServiceFunctionalTest {
         exammodel.setName("test1");
         exammodel.setTimeCreated(DateTime.now().toDate());
         examDao.save(exammodel);
-
-        long examid = exammodel.getId();
-        long newexamid = examService.getExam(examid).getId();
         //when
         //then
-        Assert.assertEquals(examid, newexamid);
+        Assert.assertEquals((long) exammodel.getId(), (long) examService.getExam(exammodel.getId()).getId());
     }
 
     @Test
