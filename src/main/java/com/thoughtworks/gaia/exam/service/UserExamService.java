@@ -2,12 +2,10 @@ package com.thoughtworks.gaia.exam.service;
 
 import com.thoughtworks.gaia.common.Loggable;
 import com.thoughtworks.gaia.common.exception.NotFoundException;
-import com.thoughtworks.gaia.exam.ExamMapper;
-import com.thoughtworks.gaia.exam.UserExamMapper;
-import com.thoughtworks.gaia.exam.dao.UserExamDao;
-import com.thoughtworks.gaia.exam.entity.Exam;
-import com.thoughtworks.gaia.exam.entity.UserExam;
-import com.thoughtworks.gaia.exam.model.UserExamModel;
+import com.thoughtworks.gaia.user.UserExamMapper;
+import com.thoughtworks.gaia.user.dao.UserExamDao;
+import com.thoughtworks.gaia.user.entity.UserExam;
+import com.thoughtworks.gaia.user.model.UserExamModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;

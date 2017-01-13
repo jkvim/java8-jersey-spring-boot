@@ -1,4 +1,4 @@
-package com.thoughtworks.gaia.exam.entity;
+package com.thoughtworks.gaia.user.entity;
 
 import javax.persistence.Column;
 import java.util.Date;

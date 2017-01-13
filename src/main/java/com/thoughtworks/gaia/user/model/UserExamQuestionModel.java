@@ -8,7 +8,7 @@ import javax.persistence.Table;
 import java.util.Date;
 
 @Entity
-@Table(name = "user")
+@Table(name = "user_exam_question")
 public class UserExamQuestionModel extends IdBaseModel {
     @Column(name = "user_exam_id", nullable = false)
     private Long userExamId;
