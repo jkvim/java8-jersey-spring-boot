@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Component
 @Transactional
 public class ExamService implements Loggable {
@@ -28,4 +30,10 @@ public class ExamService implements Loggable {
 
         return mapper.map(examModel, Exam.class);
     }
+
+    public List<ExamModel> getAllExam() {
+        List<ExamModel> allExam = examDao.where().queryList();
+        return allExam;
+    }
+
 }
