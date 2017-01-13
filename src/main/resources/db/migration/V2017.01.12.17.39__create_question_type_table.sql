@@ -3,6 +3,3 @@ CREATE TABLE `question_type` (
   `type` varchar(16) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-INSERT INTO question_type (`id`, `type`) VALUES ('1', 'logic');
-INSERT INTO question_type (`id`, `type`) VALUES ('2', 'programmable');
