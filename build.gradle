@@ -47,6 +47,9 @@ dependencies {
     compile("org.springframework.boot:spring-boot-starter-logging")
     compile("org.springframework.boot:spring-boot-starter-data-jpa")
     compile("org.springframework.boot:spring-boot-starter-aop")
+    compile "org.springframework:spring-test"
+
+    compile "org.projectlombok:lombok:1.16.8"
 
     compile("mysql:mysql-connector-java")
     compile("org.springframework:spring-context-support")
@@ -65,7 +68,10 @@ dependencies {
     compile libraries.commons_beanutils
     compile libraries.hashids
 
+
+    testCompile "junit:junit"
     testCompile("com.h2database:h2")
+    testCompile "org.mockito:mockito-core:1.+"
     testCompile("org.springframework.boot:spring-boot-starter-test")
 
     testCompile libraries.assertj_core

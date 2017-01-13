@@ -1,6 +1,6 @@
 package test.functional.user;
 
-import com.exmertec.yaz.core.Query;
+import com.thoughtworks.gaia.common.exception.NotFoundException;
 import com.thoughtworks.gaia.GaiaApplication;
 import com.thoughtworks.gaia.common.constant.EnvProfile;
 import com.thoughtworks.gaia.common.exception.NotFoundException;
@@ -20,11 +20,6 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
-import sun.plugin.util.UserProfile;
-
-import javax.persistence.criteria.AbstractQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.Predicate;
 import java.util.List;
 
 import java.io.InvalidObjectException;
@@ -106,5 +101,84 @@ public class UserServiceFunctionTest {
     @Test
     public void should_addUser_return_true() {
         userService.addUser("success@thoughtworks.com","password");
+    }
+
+    @Test
+    public void should_update_user_fail_when_given_not_exist_user_id() {
+        User user = new User();
+        user.setName("Tim");
+        user.setGender(true);
+        user.setSchool("Jiaotong");
+        user.setMajor("Electronic");
+        user.setTel("12222");
+
+        boolean notFoundException = false;
+        try {
+            userService.updateUserProfile(1L, user);
+        } catch (NotFoundException e) {
+            notFoundException = true;
+        }
+
+        assertThat(notFoundException).isEqualTo(true);
+    }
+
+    @Test
+    public void should_update_user_success_when_given_correct_data() {
+        UserModel userModel = new UserModel();
+        userModel.setUserTypeId(1L);
+        userModel.setEmail("test123@qq.com");
+        userModel.setPassword("123");
+        userModel.setName("Josh");
+        userModel.setGender(true);
+        userModel.setSchool("Xidian");
+        userModel.setMajor("Computer");
+        userModel.setTel("13298394937");
+        userModel.setTimeCreated(DateTime.now().toDate());
+
+        userDao.save(userModel);
+        long userId = userModel.getId();
+
+        User user = new User();
+        user.setId(userId);
+        user.setName("Tim");
+        user.setGender(true);
+        user.setSchool("Jiaotong");
+        user.setMajor("Electronic");
+        user.setTel("13877387648");
+
+        assertThat(userService.updateUserProfile(userId, user)).isEqualTo(true);
+
+        User user1 = userService.getUser(userId);
+        assertThat(user1.getName()).isEqualTo(user.getName());
+        assertThat(user1.getGender()).isEqualTo(user.getGender());
+        assertThat(user1.getSchool()).isEqualTo(user.getSchool());
+        assertThat(user1.getMajor()).isEqualTo(user.getMajor());
+    }
+
+    @Test
+    public void should_update_user_fail_when_given_incorrect_data() {
+        UserModel userModel = new UserModel();
+        userModel.setUserTypeId(1L);
+        userModel.setEmail("test123@qq.com");
+        userModel.setPassword("123");
+        userModel.setName("Josh");
+        userModel.setGender(true);
+        userModel.setSchool("Xidian");
+        userModel.setMajor("Computer");
+        userModel.setTel("13298394937");
+        userModel.setTimeCreated(DateTime.now().toDate());
+
+        userDao.save(userModel);
+        long userId = userModel.getId();
+
+        User user = new User();
+        user.setId(userId);
+        user.setName("Tim");
+        user.setGender(true);
+        user.setSchool("Jiaotong");
+        user.setMajor("Electronic");
+        user.setTel("12222");
+
+        assertThat(userService.updateUserProfile(userId, user)).isEqualTo(false);
     }
 }
