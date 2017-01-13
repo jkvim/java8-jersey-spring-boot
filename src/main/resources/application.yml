@@ -2,7 +2,7 @@ spring:
   datasource:
     url: jdbc:mysql://localhost/gaia
     username: root
-    password: Kenwang1!
+    password:
     driver-class-name: com.mysql.jdbc.Driver
   aop:
     auto: true
@@ -45,7 +45,7 @@ spring:
     datasource:
           url: jdbc:h2:mem:gaia;DB_CLOSE_DELAY=-1;MODE=MySQL;INIT=RUNSCRIPT FROM 'classpath:init_test_db.sql';
           username: root
-          password: Kenwang1!
+          password:
           driver-class-name: org.h2.Driver
 
 ---
