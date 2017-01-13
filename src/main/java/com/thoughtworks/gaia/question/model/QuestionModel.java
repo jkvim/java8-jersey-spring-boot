@@ -8,21 +8,26 @@ import javax.persistence.Table;
 import java.util.Date;
 
 @Entity
-@Table(name = "PRODUCT")
+@Table(name = "question")
 public class QuestionModel extends IdBaseModel {
-    @Column(name = "name", nullable = false, length = 64)
-    private String name;
+    @Column(name = "content", nullable = true, length = 4096)
+    private String content;
+
+    @Column(name = "result", nullable = true, length = 512)
+    private String result;
 
     @Column(name = "time_created", nullable = false, updatable = false)
     private Date timeCreated;
 
-    public String getName() {
-        return name;
+    public String getContent() { return content; }
+
+    public void setContent(String content) {
+        this.content = content;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    public String getResult() { return result; }
+
+    public void setResult(String result) { this.result = result; }
 
     public Date getTimeCreated() {
         return timeCreated;

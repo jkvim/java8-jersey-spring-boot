@@ -5,7 +5,11 @@ import java.util.Date;
 public class Question {
     private Long id;
 
-    private String name;
+    private Long type_id;
+
+    private String content;
+
+    private String result;
 
     private Date timeCreated;
 
@@ -17,13 +21,21 @@ public class Question {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getContent() {
+        return content;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setContent(String content) {
+        this.content = content;
     }
+
+    public String getResult() { return result; }
+
+    public void setResult() { this.result = result; }
+
+    public Long getTypeId() { return type_id; }
+
+    public void setTypeId() { this.type_id = type_id; }
 
     public Date getTimeCreated() {
         return timeCreated;
