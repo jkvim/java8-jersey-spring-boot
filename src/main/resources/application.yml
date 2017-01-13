@@ -2,7 +2,7 @@ spring:
   datasource:
     url: jdbc:mysql://localhost/gaia
     username: root
-    password:
+    password: Kenwang1!
     driver-class-name: com.mysql.jdbc.Driver
   aop:
     auto: true

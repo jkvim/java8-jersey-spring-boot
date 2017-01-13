@@ -1,6 +1,5 @@
 package test.functional.user;
 
-import com.thoughtworks.gaia.common.exception.NotFoundException;
 import com.thoughtworks.gaia.GaiaApplication;
 import com.thoughtworks.gaia.common.constant.EnvProfile;
 import com.thoughtworks.gaia.common.exception.NotFoundException;
@@ -9,7 +8,6 @@ import com.thoughtworks.gaia.user.entity.User;
 import com.thoughtworks.gaia.user.model.UserModel;
 import com.thoughtworks.gaia.user.service.UserService;
 import com.thoughtworks.xstream.converters.javabean.JavaBeanConverter;
-import com.thoughtworks.xstream.converters.reflection.AbstractReflectionConverter;
 import org.joda.time.DateTime;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,9 +18,6 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
-import java.util.List;
-
-import java.io.InvalidObjectException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
