@@ -8,7 +8,7 @@ CREATE TABLE `user` (
   `school` varchar(64) NULL,
   `major` varchar(64) NULL,
   `user_type_id` bigint NOT NULL,
-  `time_created` datetime DEFAULT NULL,
+  `time_created` datetime DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   CONSTRAINT fk_user_type FOREIGN KEY (user_type_id) REFERENCES user_type(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
