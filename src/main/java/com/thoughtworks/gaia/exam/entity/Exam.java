@@ -3,17 +3,23 @@ package com.thoughtworks.gaia.exam.entity;
 import java.util.Date;
 
 public class Exam {
-    private Long id;
+    private int id;
 
     private String name;
 
     private Date timeCreated;
 
-    public Long getId() {
+    private int logicQuestionCount;
+
+    private int progQuestionCount;
+
+    private int statusId;
+
+    public int getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -31,5 +37,29 @@ public class Exam {
 
     public void setTimeCreated(Date timeCreated) {
         this.timeCreated = timeCreated;
+    }
+
+    public int getLogicQuestionCount() {
+        return logicQuestionCount;
+    }
+
+    public void setLogicQuestionCount(int logicQuestionCount) {
+        this.logicQuestionCount = logicQuestionCount;
+    }
+
+    public int getProgQuestionCount() {
+        return progQuestionCount;
+    }
+
+    public void setProgQuestionCount(int progQuestionCount) {
+        this.progQuestionCount = progQuestionCount;
+    }
+
+    public int getStatusId() {
+        return statusId;
+    }
+
+    public void setStatusId(int statusId) {
+        this.statusId = statusId;
     }
 }
