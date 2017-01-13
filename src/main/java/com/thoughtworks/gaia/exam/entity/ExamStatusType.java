@@ -3,7 +3,7 @@ package com.thoughtworks.gaia.exam.entity;
 /**
  * Created by jiemeng on 1/12/17.
  */
-public class ExamStatus {
+public class ExamStatusType {
 
     private Long id;
 
