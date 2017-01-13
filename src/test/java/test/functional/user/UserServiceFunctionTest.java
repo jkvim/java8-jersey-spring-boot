@@ -1,10 +1,10 @@
-package test.functional.exam;
+package test.functional.user;
 
 import com.thoughtworks.gaia.GaiaApplication;
 import com.thoughtworks.gaia.common.constant.EnvProfile;
 import com.thoughtworks.gaia.common.exception.NotFoundException;
-import com.thoughtworks.gaia.exam.dao.ExamDao;
-import com.thoughtworks.gaia.exam.service.ExamService;
+import com.thoughtworks.gaia.user.dao.UserDao;
+import com.thoughtworks.gaia.user.service.UserService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,38 +14,39 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.springframework.test.util.AssertionErrors.assertEquals;
-
-
-/**
- * Created by jkwang on 1/12/17.
- */
-
+import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(GaiaApplication.class)
 @Rollback
 @Transactional
 @ActiveProfiles({EnvProfile.TEST})
-public class ExamServiceFunctionalTest {
+/**
+ * Created by jkwang on 1/12/17.
+ */
+public class UserServiceFunctionTest {
 
     @Autowired
-    private ExamService examService;
+    private UserService userService;
 
     @Autowired
-    private ExamDao examDao;
+    private UserDao userDao;
+
 
     @Test(expected = NotFoundException.class)
-    public void should_exam_notexists_function_when_given_1() {
-        examService.getExam(1L);
+    public void should_user_notexists_function_when_given_1() {
+        //given
+        //when
+        //then
+        userService.getUser((long) -1);
     }
 
 
     @Test
-    public  void should_exam_exists_function_when_given_1(){
+    public void should_user_exists_function_when_given_1() {
         //given
         //when
         //then
-        assertEquals("", examService.getExam((long) 2),null);
+        assertThat(new UserService().getUser((long) 1).getId()).isEqualTo((long) 1);
     }
 }
