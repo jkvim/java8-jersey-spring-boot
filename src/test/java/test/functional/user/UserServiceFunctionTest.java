@@ -6,15 +6,20 @@ import com.thoughtworks.gaia.common.exception.NotFoundException;
 import com.thoughtworks.gaia.user.dao.UserDao;
 import com.thoughtworks.gaia.user.model.UserModel;
 import com.thoughtworks.gaia.user.service.UserService;
+import com.thoughtworks.xstream.converters.javabean.JavaBeanConverter;
+import com.thoughtworks.xstream.converters.reflection.AbstractReflectionConverter;
 import org.joda.time.DateTime;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.InvalidPropertyException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.io.InvalidObjectException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -61,5 +66,35 @@ public class UserServiceFunctionTest {
         //when
         //then
         assertThat(userid).isEqualTo(newuserid);
+    }
+    
+    @Test(expected = InvalidPropertyException.class)
+    public void should_addUser_throw_exception_given_invalid_email() {
+        userService.addUser("email","password");
+    }
+
+    @Test(expected = JavaBeanConverter.DuplicatePropertyException.class)
+    public void should_addUser_throw_exception_given_existing_user() {
+        //given
+        String email = "fail@thoughtworks.com";
+        //when
+        UserModel userModel = new UserModel();
+        userModel.setUserTypeId(1L);
+        userModel.setEmail(email);
+        userModel.setPassword("password");
+        userModel.setGender(true);
+        userDao.save(userModel);
+        //then
+        userService.addUser(email,"password");
+    }
+    
+    @Test(expected = InvalidPropertyException.class)
+    public void should_addUser_throw_exception_given_empty_password() {
+        userService.addUser("fail@thoughtworks.com","");
+    }
+    
+    @Test
+    public void should_addUser_return_true() {
+        userService.addUser("success@thoughtworks.com","password");
     }
 }
