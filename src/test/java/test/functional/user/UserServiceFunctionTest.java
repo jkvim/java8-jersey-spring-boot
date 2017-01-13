@@ -1,9 +1,11 @@
 package test.functional.user;
 
+import com.exmertec.yaz.core.Query;
 import com.thoughtworks.gaia.GaiaApplication;
 import com.thoughtworks.gaia.common.constant.EnvProfile;
 import com.thoughtworks.gaia.common.exception.NotFoundException;
 import com.thoughtworks.gaia.user.dao.UserDao;
+import com.thoughtworks.gaia.user.entity.User;
 import com.thoughtworks.gaia.user.model.UserModel;
 import com.thoughtworks.gaia.user.service.UserService;
 import com.thoughtworks.xstream.converters.javabean.JavaBeanConverter;
@@ -18,6 +20,12 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
+import sun.plugin.util.UserProfile;
+
+import javax.persistence.criteria.AbstractQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.Predicate;
+import java.util.List;
 
 import java.io.InvalidObjectException;
 
@@ -38,13 +46,15 @@ public class UserServiceFunctionTest {
 
     @Autowired
     private UserDao userDao;
+    private UserDao userDao1;
 
     @Test(expected = NotFoundException.class)
     public void should_user_notexists_when_given_1() {
         //given
         //when
         //then
-        userService.getUser((long) -1);
+        User userModel =  userService.getUser((long) -1);
+        String username = userModel.getName();
     }
 
     @Test
@@ -67,7 +77,7 @@ public class UserServiceFunctionTest {
         //then
         assertThat(userid).isEqualTo(newuserid);
     }
-    
+
     @Test(expected = InvalidPropertyException.class)
     public void should_addUser_throw_exception_given_invalid_email() {
         userService.addUser("email","password");
@@ -87,12 +97,12 @@ public class UserServiceFunctionTest {
         //then
         userService.addUser(email,"password");
     }
-    
+
     @Test(expected = InvalidPropertyException.class)
     public void should_addUser_throw_exception_given_empty_password() {
         userService.addUser("fail@thoughtworks.com","");
     }
-    
+
     @Test
     public void should_addUser_return_true() {
         userService.addUser("success@thoughtworks.com","password");

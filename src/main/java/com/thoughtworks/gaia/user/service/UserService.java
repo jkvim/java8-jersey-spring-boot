@@ -36,7 +36,6 @@ public class UserService implements Loggable {
             error("User not found with id: " + userId);
             throw new NotFoundException();
         }
-
         return mapper.map(userModel, User.class);
     }
 

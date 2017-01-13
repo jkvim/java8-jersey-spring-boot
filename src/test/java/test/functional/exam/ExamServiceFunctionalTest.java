@@ -4,6 +4,7 @@ import com.thoughtworks.gaia.GaiaApplication;
 import com.thoughtworks.gaia.common.constant.EnvProfile;
 import com.thoughtworks.gaia.common.exception.NotFoundException;
 import com.thoughtworks.gaia.exam.dao.ExamDao;
+import com.thoughtworks.gaia.exam.entity.Exam;
 import com.thoughtworks.gaia.exam.model.ExamModel;
 import com.thoughtworks.gaia.exam.service.ExamService;
 import org.joda.time.DateTime;
@@ -16,6 +17,11 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Date;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 
 /**
@@ -58,4 +64,28 @@ public class ExamServiceFunctionalTest {
         //then
         Assert.assertEquals(examid, newexamid);
     }
+
+    @Test
+    public void should_return_all_exam_info() {
+        // given
+        ExamModel examModel = dummyExams();
+        examDao.save(examModel);
+
+        // when
+        List<ExamModel> allExam = examService.getAllExam();
+
+        // then
+        assertThat(allExam.get(0)).isEqualTo(examModel);
+    }
+
+    public ExamModel dummyExams() {
+        ExamModel examModel = new ExamModel();
+        examModel.setLogicQuestionCount(10);
+        examModel.setProgQuestionCount(10);
+        examModel.setStatusTypeId(1L);
+        examModel.setName("test2");
+        examModel.setTimeCreated(new Date());
+        return examModel;
+    }
+
 }
