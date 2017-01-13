@@ -12,7 +12,9 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class JerseyConfig extends ResourceConfig {
     private static final String[] MODULE_PACKAGES = new String[]{
-        "com.thoughtworks.gaia.product.endpoint",
+            "com.thoughtworks.gaia.product.endpoint",
+            "com.thoughtworks.gaia.exam.endpoint",
+            "com.thoughtworks.gaia.user.endpoint",
     };
 
     public JerseyConfig() {
