@@ -22,8 +22,8 @@ public class ExamModel extends IdBaseModel {
     @Column(name = "prog_q_count", nullable = false, updatable = false)
     private int progQuestionCount;
 
-    @Column(name = "status_id", nullable = false, updatable = true)
-    private Long statusId;
+    @Column(name = "status_type_id", nullable = false, updatable = true)
+    private Long statusTypeId;
 
     public String getName() {
         return name;
@@ -57,11 +57,11 @@ public class ExamModel extends IdBaseModel {
         this.progQuestionCount = progQuestionCount;
     }
 
-    public Long getStatusId() {
-        return statusId;
+    public Long getStatusTypeId() {
+        return statusTypeId;
     }
 
-    public void setStatusId(Long statusId) {
-        this.statusId = statusId;
+    public void setStatusTypeId(Long statusTypeId) {
+        this.statusTypeId = statusTypeId;
     }
 }

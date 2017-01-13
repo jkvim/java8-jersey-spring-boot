@@ -7,8 +7,8 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "exam_status")
-public class ExamStatusModel extends IdBaseModel {
+@Table(name = "exam_status_type")
+public class ExamStatusTypeModel extends IdBaseModel {
     @Column(name = "status", nullable = false, length = 8)
     private String status;
 
