@@ -28,9 +28,9 @@ public class UserEndPoint {
             @ApiResponse(code = 200, message = "Get user successfully"),
             @ApiResponse(code = 404, message = "No user matches given id")
     })
+
     @GET
     public Response getUser(@PathParam("user_id") Long userId) {
-        User user = userService.getUser(userId);
-        return Response.ok().entity(user).build();
+        return Response.ok().entity(userService.getUser(userId)).build();
     }
 }

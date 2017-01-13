@@ -37,12 +37,12 @@ public class ExamServiceFunctionalTest {
     private ExamDao examDao;
 
     @Test(expected = NotFoundException.class)
-    public void should_exam_notexists_function_when_given() {
+    public void should_exam_notexists_when_given() {
         examService.getExam(1L);
     }
 
     @Test
-    public void should_exam_exists_function_when_given() {
+    public void should_exam_exists_when_given() {
         //given
         ExamModel exammodel = new ExamModel();
         exammodel.setLogicQuestionCount(10);

@@ -44,15 +44,16 @@ public class UserServiceFunctionTest {
     private UserDao userDao1;
 
     @Test(expected = NotFoundException.class)
-    public void should_user_notexists_function_when_given_1() {
+    public void should_user_notexists_when_given_1() {
         //given
         //when
         //then
-        userService.getUser((long) -1);
+        User userModel =  userService.getUser((long) -1);
+        String username = userModel.getName();
     }
 
     @Test
-    public void should_user_exists_function_when_given_2() {
+    public void should_user_exists_when_given_2() {
         //given
         UserModel usermodel = new UserModel();
         usermodel.setUserTypeId(1L);
