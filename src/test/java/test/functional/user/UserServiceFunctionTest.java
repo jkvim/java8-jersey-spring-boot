@@ -4,6 +4,7 @@ import com.thoughtworks.gaia.GaiaApplication;
 import com.thoughtworks.gaia.common.constant.EnvProfile;
 import com.thoughtworks.gaia.common.exception.NotFoundException;
 import com.thoughtworks.gaia.user.dao.UserDao;
+import com.thoughtworks.gaia.user.entity.User;
 import com.thoughtworks.gaia.user.model.UserModel;
 import com.thoughtworks.gaia.user.service.UserService;
 import org.joda.time.DateTime;
@@ -39,7 +40,8 @@ public class UserServiceFunctionTest {
         //given
         //when
         //then
-        userService.getUser((long) -1);
+        User userModel =  userService.getUser((long) -1);
+        String username = userModel.getName();
     }
 
     @Test
