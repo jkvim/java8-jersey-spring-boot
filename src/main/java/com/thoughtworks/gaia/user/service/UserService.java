@@ -10,6 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 @Component
 @Transactional
 public class UserService implements Loggable {
@@ -27,5 +30,10 @@ public class UserService implements Loggable {
         }
 
         return mapper.map(userModel, User.class);
+    }
+
+    private boolean isValidEmail(String email) {
+        String pattern = "^(\\w)+(\\.\\w+)*@(\\w)+((\\.\\w+)+)$";
+        return Pattern.matches(pattern, email);
     }
 }
