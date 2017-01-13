@@ -35,7 +35,7 @@ public class UserServiceFunctionTest {
     private UserDao userDao;
 
     @Test(expected = NotFoundException.class)
-    public void should_user_notexists_function_when_given_1() {
+    public void should_user_notexists_when_given_1() {
         //given
         //when
         //then
@@ -43,7 +43,7 @@ public class UserServiceFunctionTest {
     }
 
     @Test
-    public void should_user_exists_function_when_given_2() {
+    public void should_user_exists_when_given_2() {
         //given
         UserModel usermodel = new UserModel();
         usermodel.setUserTypeId(1L);
