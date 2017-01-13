@@ -3,7 +3,10 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/java8-jersey-spring-boot.iml" filepath="$PROJECT_DIR$/.idea/modules/java8-jersey-spring-boot.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/java8-jersey-spring-boot.iml" filepath="$PROJECT_DIR$/.idea/modules/java8-jersey-spring-boot.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/java8-jersey-spring-boot_main.iml" filepath="$PROJECT_DIR$/.idea/modules/java8-jersey-spring-boot_main.iml" group="java8-jersey-spring-boot" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/java8-jersey-spring-boot_main.iml" filepath="$PROJECT_DIR$/.idea/modules/java8-jersey-spring-boot_main.iml" group="java8-jersey-spring-boot" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/java8-jersey-spring-boot_test.iml" filepath="$PROJECT_DIR$/.idea/modules/java8-jersey-spring-boot_test.iml" group="java8-jersey-spring-boot" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/java8-jersey-spring-boot_test.iml" filepath="$PROJECT_DIR$/.idea/modules/java8-jersey-spring-boot_test.iml" group="java8-jersey-spring-boot" />
     </modules>
   </component>
