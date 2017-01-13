@@ -1,6 +1,6 @@
 CREATE TABLE `question` (
-  `id` tinyint NOT NULL AUTO_INCREMENT,
-  `type_id` tinyint NOT NULL,
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `type_id` bigint NOT NULL,
   `content` varchar(4096) DEFAULT NULL,
   `result` varchar(512) DEFAULT NULL,
   `time_created` datetime DEFAULT NULL,

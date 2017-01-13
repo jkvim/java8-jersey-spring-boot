@@ -3,7 +3,7 @@ package com.thoughtworks.gaia.exam.entity;
 import java.util.Date;
 
 public class Exam {
-    private Long id;
+    private int id;
 
     private String name;
 
@@ -15,11 +15,11 @@ public class Exam {
 
     private int statusId;
 
-    public Long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 

@@ -1,7 +1,7 @@
 CREATE TABLE `user_exam` (
-  `id` tinyint NOT NULL AUTO_INCREMENT,
-  `user_id` tinyint NOT NULL,
-  `exam_id` tinyint NOT NULL,
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `user_id` bigint NOT NULL,
+  `exam_id` bigint NOT NULL,
   `score` int NOT NULL,
   `time_created` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),

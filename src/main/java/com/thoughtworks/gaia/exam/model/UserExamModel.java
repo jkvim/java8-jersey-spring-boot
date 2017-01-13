@@ -12,10 +12,10 @@ import java.util.Date;
 public class UserExamModel extends IdBaseModel {
 
     @Column(name = "user_id", nullable = false, updatable = false)
-    private int userId;
+    private Long userId;
 
     @Column(name = "exam_id", nullable = false, updatable = false)
-    private int examId;
+    private Long examId;
 
     @Column(name = "score", nullable = false, updatable = true)
     private int score;
@@ -23,19 +23,19 @@ public class UserExamModel extends IdBaseModel {
     @Column(name = "time_created", nullable = false, updatable = false)
     private Date timeCreated;
 
-    public int getUserId() {
+    public Long getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(Long userId) {
         this.userId = userId;
     }
 
-    public int getExamId() {
+    public Long getExamId() {
         return examId;
     }
 
-    public void setExamId(int examId) {
+    public void setExamId(Long examId) {
         this.examId = examId;
     }
 

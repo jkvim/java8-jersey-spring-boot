@@ -23,7 +23,7 @@ public class ExamModel extends IdBaseModel {
     private int progQuestionCount;
 
     @Column(name = "status_id", nullable = false, updatable = true)
-    private int statusId;
+    private Long statusId;
 
     public String getName() {
         return name;
@@ -57,11 +57,11 @@ public class ExamModel extends IdBaseModel {
         this.progQuestionCount = progQuestionCount;
     }
 
-    public int getStatusId() {
+    public Long getStatusId() {
         return statusId;
     }
 
-    public void setStatusId(int statusId) {
+    public void setStatusId(Long statusId) {
         this.statusId = statusId;
     }
 }
