@@ -19,7 +19,7 @@ public class UserModel extends IdBaseModel {
     @Column(name = "name", nullable = true, length = 64)
     private String name;
 
-    @Column(name = "gender", nullable = true)
+    @Column(name = "gender")
     private boolean gender;
 
     @Column(name = "tel", nullable = true, length = 11)
@@ -32,7 +32,7 @@ public class UserModel extends IdBaseModel {
     private String major;
 
     @Column(name = "user_type_id", nullable = false)
-    private short user_type_id;
+    private Long userTypeId;
 
     @Column(name = "time_created", nullable = false, updatable = false)
     private Date timeCreated;
@@ -93,12 +93,10 @@ public class UserModel extends IdBaseModel {
         this.major = major;
     }
 
-    public short getUserTypeId() {
-        return user_type_id;
-    }
+    public Long getUserTypeId() { return userTypeId; }
 
-    public void setUserTypeId(short userTypeId) {
-        this.user_type_id = userTypeId;
+    public void setUserTypeId(Long userTypeId) {
+        this.userTypeId = userTypeId;
     }
 
     public Date getTimeCreated() {

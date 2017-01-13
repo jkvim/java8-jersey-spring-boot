@@ -3,7 +3,7 @@ package com.thoughtworks.gaia.user.entity;
 import java.util.Date;
 
 public class User {
-    private short id;
+    private Long id;
 
     private String email;
 
@@ -19,15 +19,15 @@ public class User {
 
     private String major;
 
-    private short userTypeId;
+    private Long userTypeId;
 
     private Date timeCreated;
 
-    public short getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(short id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -87,11 +87,11 @@ public class User {
         this.major = major;
     }
 
-    public short getUserTypeId() {
+    public Long getUserTypeId() {
         return userTypeId;
     }
 
-    public void setUserTypeId(short userTypeId) {
+    public void setUserTypeId(Long userTypeId) {
         this.userTypeId = userTypeId;
     }
 
@@ -99,7 +99,5 @@ public class User {
         return timeCreated;
     }
 
-    public void setTimeCreated(Date timeCreated) {
-        this.timeCreated = timeCreated;
-    }
+    public void setTimeCreated(Date timeCreated) { this.timeCreated = timeCreated; }
 }
