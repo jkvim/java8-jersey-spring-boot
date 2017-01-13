@@ -1,5 +1,6 @@
 package test.functional.user;
 
+import com.exmertec.yaz.core.Query;
 import com.thoughtworks.gaia.GaiaApplication;
 import com.thoughtworks.gaia.common.constant.EnvProfile;
 import com.thoughtworks.gaia.common.exception.NotFoundException;
@@ -16,6 +17,12 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
+import sun.plugin.util.UserProfile;
+
+import javax.persistence.criteria.AbstractQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.Predicate;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -34,6 +41,7 @@ public class UserServiceFunctionTest {
 
     @Autowired
     private UserDao userDao;
+    private UserDao userDao1;
 
     @Test(expected = NotFoundException.class)
     public void should_user_notexists_when_given_1() {
@@ -63,5 +71,32 @@ public class UserServiceFunctionTest {
         //when
         //then
         assertThat(userid).isEqualTo(newuserid);
+    }
+
+    @Test
+    public void should_patch_user_111_profile_fail() {
+
+    }
+
+    @Test
+    public void should_find_user_by_name_return_true() {
+
+        UserModel userModel = new UserModel();
+        userModel.setUserTypeId(1L);
+        userModel.setEmail("test123@qq.com");
+        userModel.setPassword("123");
+        userModel.setName("Josh");
+        userModel.setGender(true);
+        userModel.setSchool("Xidian");
+        userModel.setMajor("Computer");
+        userModel.setTel("13298394937");
+        userModel.setTimeCreated(DateTime.now().toDate());
+
+        userDao.save(userModel);
+        long userId = userModel.getId();
+
+        List<UserModel> mlist = userDao.findUserByName("Josh");
+        assertThat(mlist.size()).isEqualTo(1);
+        assertThat(mlist.get(0).getName()).isEqualTo("Josh");
     }
 }
