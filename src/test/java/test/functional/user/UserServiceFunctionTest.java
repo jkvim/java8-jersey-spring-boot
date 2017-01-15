@@ -42,7 +42,7 @@ public class UserServiceFunctionTest {
         //given
         //when
         //then
-        userService.getUser((long) -1);
+        userService.getUser(-1L);
     }
 
     @Test
@@ -59,9 +59,9 @@ public class UserServiceFunctionTest {
         usermodel.setTel("11111111111");
         usermodel.setTimeCreated(DateTime.now().toDate());
         userDao.save(usermodel);
+        //when
         long userid = usermodel.getId();
         long newuserid = userService.getUser(userid).getId();
-        //when
         //then
         assertThat(userid).isEqualTo(newuserid);
     }
