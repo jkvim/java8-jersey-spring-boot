@@ -4,7 +4,6 @@ import com.thoughtworks.gaia.GaiaApplication;
 import com.thoughtworks.gaia.common.constant.EnvProfile;
 import com.thoughtworks.gaia.common.exception.NotFoundException;
 import com.thoughtworks.gaia.exam.dao.ExamDao;
-import com.thoughtworks.gaia.exam.entity.Exam;
 import com.thoughtworks.gaia.exam.model.ExamModel;
 import com.thoughtworks.gaia.exam.service.ExamService;
 import org.joda.time.DateTime;
