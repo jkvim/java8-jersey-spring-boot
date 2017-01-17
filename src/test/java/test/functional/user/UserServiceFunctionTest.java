@@ -3,13 +3,11 @@ package test.functional.user;
 import com.thoughtworks.gaia.common.exception.NotFoundException;
 import com.thoughtworks.gaia.GaiaApplication;
 import com.thoughtworks.gaia.common.constant.EnvProfile;
-import com.thoughtworks.gaia.common.exception.NotFoundException;
 import com.thoughtworks.gaia.user.dao.UserDao;
 import com.thoughtworks.gaia.user.entity.User;
 import com.thoughtworks.gaia.user.model.UserModel;
 import com.thoughtworks.gaia.user.service.UserService;
 import com.thoughtworks.xstream.converters.javabean.JavaBeanConverter;
-import com.thoughtworks.xstream.converters.reflection.AbstractReflectionConverter;
 import org.joda.time.DateTime;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,9 +18,7 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
-import java.util.List;
-
-import java.io.InvalidObjectException;
+import test.functional.Helper;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -31,9 +27,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Rollback
 @Transactional
 @ActiveProfiles({EnvProfile.TEST})
-/**
- * Created by jkwang on 1/12/17.
- */
 public class UserServiceFunctionTest {
 
     @Autowired
@@ -41,144 +34,124 @@ public class UserServiceFunctionTest {
 
     @Autowired
     private UserDao userDao;
-    private UserDao userDao1;
 
     @Test(expected = NotFoundException.class)
-    public void should_user_notexists_when_given_1() {
-        //given
-        //when
-        //then
-        User userModel =  userService.getUser((long) -1);
-        String username = userModel.getName();
+    public void should_getUser_throw_exception_when_given_nonexisting_Id() {
+        userService.getUser(Helper.getNonExistingUserId());
     }
 
     @Test
-    public void should_user_exists_when_given_2() {
+    public void should_getUser_return_matched_user_when_given_existing_Id() {
         //given
-        UserModel usermodel = new UserModel();
-        usermodel.setUserTypeId(1L);
-        usermodel.setName("student1");
-        usermodel.setEmail("test@11.com");
-        usermodel.setGender(true);
-        usermodel.setMajor("math");
-        usermodel.setPassword("test");
-        usermodel.setSchool("xam");
-        usermodel.setTel("11111111111");
-        usermodel.setTimeCreated(DateTime.now().toDate());
-        userDao.save(usermodel);
-        long userid =usermodel.getId();
-        long newuserid = userService.getUser(userid).getId();
+        UserModel userModel = Helper.getNewUserModelbyUsernameAndPassword(Helper.getValidEmail(), Helper.getValidPassword());
         //when
+        userDao.save(userModel);
+        Long expectedUserId = userModel.getId();
+        Long actualUserId = userService.getUser(expectedUserId).getId();
         //then
-        assertThat(userid).isEqualTo(newuserid);
+        assertThat(actualUserId).isEqualTo(expectedUserId);
     }
 
     @Test(expected = InvalidPropertyException.class)
     public void should_addUser_throw_exception_given_invalid_email() {
-        userService.addUser("email","password");
+        userService.addUser(Helper.getInvalidEmail(), Helper.getValidPassword());
     }
 
     @Test(expected = JavaBeanConverter.DuplicatePropertyException.class)
-    public void should_addUser_throw_exception_given_existing_user() {
+    public void should_addUser_throw_exception_when_given_existing_user() {
         //given
-        String email = "fail@thoughtworks.com";
+        String email = Helper.getValidEmail();
+        String password = Helper.getValidPassword();
         //when
-        UserModel userModel = new UserModel();
-        userModel.setUserTypeId(1L);
-        userModel.setEmail(email);
-        userModel.setPassword("password");
-        userModel.setGender(true);
-        userDao.save(userModel);
+        userDao.save(Helper.getNewUserModelbyUsernameAndPassword(email, password));
         //then
-        userService.addUser(email,"password");
+        userService.addUser(email, password);
     }
 
     @Test(expected = InvalidPropertyException.class)
-    public void should_addUser_throw_exception_given_empty_password() {
-        userService.addUser("fail@thoughtworks.com","");
+    public void should_addUser_throw_exception_when_given_empty_password() {
+        userService.addUser(Helper.getValidEmail(), "");
     }
 
     @Test
     public void should_addUser_return_true() {
-        userService.addUser("success@thoughtworks.com","password");
+        assertThat(userService.addUser(Helper.getValidEmail(), Helper.getValidPassword())).isTrue();
+    }
+
+    @Test(expected = NotFoundException.class)
+    public void should_updateUserProfile_throw_exception_when_given_nonexisting_id() {
+        Long userId = Helper.getNonExistingUserId();
+        userService.updateUserProfile(userId, Helper.getNewUserByUserId(userId));
     }
 
     @Test
-    public void should_update_user_fail_when_given_not_exist_user_id() {
-        User user = new User();
-        user.setName("Tim");
-        user.setGender(true);
-        user.setSchool("Jiaotong");
-        user.setMajor("Electronic");
-        user.setTel("12222");
-
-        boolean notFoundException = false;
-        try {
-            userService.updateUserProfile(1L, user);
-        } catch (NotFoundException e) {
-            notFoundException = true;
-        }
-
-        assertThat(notFoundException).isEqualTo(true);
-    }
-
-    @Test
-    public void should_update_user_success_when_given_correct_data() {
-        UserModel userModel = new UserModel();
-        userModel.setUserTypeId(1L);
-        userModel.setEmail("test123@qq.com");
-        userModel.setPassword("123");
-        userModel.setName("Josh");
-        userModel.setGender(true);
-        userModel.setSchool("Xidian");
-        userModel.setMajor("Computer");
-        userModel.setTel("13298394937");
-        userModel.setTimeCreated(DateTime.now().toDate());
-
+    public void should_updateUserProfile_return_true() {
+        //given
+        UserModel userModel = Helper.getNewUserModel();
+        //when
         userDao.save(userModel);
         long userId = userModel.getId();
-
-        User user = new User();
-        user.setId(userId);
-        user.setName("Tim");
-        user.setGender(true);
-        user.setSchool("Jiaotong");
-        user.setMajor("Electronic");
-        user.setTel("13877387648");
-
-        assertThat(userService.updateUserProfile(userId, user)).isEqualTo(true);
-
-        User user1 = userService.getUser(userId);
-        assertThat(user1.getName()).isEqualTo(user.getName());
-        assertThat(user1.getGender()).isEqualTo(user.getGender());
-        assertThat(user1.getSchool()).isEqualTo(user.getSchool());
-        assertThat(user1.getMajor()).isEqualTo(user.getMajor());
+        User user = Helper.getNewUserByUserId(userId);
+        boolean result = userService.updateUserProfile(userId, user);
+        User userUpdated = userService.getUser(userId);
+        //then
+        assertThat(result).isTrue();
+        assertThat(userUpdated.getName()).isEqualTo(user.getName());
+        assertThat(userUpdated.getGender()).isEqualTo(user.getGender());
+        assertThat(userUpdated.getTel()).isEqualTo(user.getTel());
+        assertThat(userUpdated.getSchool()).isEqualTo(user.getSchool());
+        assertThat(userUpdated.getMajor()).isEqualTo(user.getMajor());
     }
 
     @Test
-    public void should_update_user_fail_when_given_incorrect_data() {
-        UserModel userModel = new UserModel();
-        userModel.setUserTypeId(1L);
-        userModel.setEmail("test123@qq.com");
-        userModel.setPassword("123");
-        userModel.setName("Josh");
-        userModel.setGender(true);
-        userModel.setSchool("Xidian");
-        userModel.setMajor("Computer");
-        userModel.setTel("13298394937");
-        userModel.setTimeCreated(DateTime.now().toDate());
-
+    public void should_updateUserProfile_return_false_when_given_invalid_name() {
+        //given
+        UserModel userModel = Helper.getNewUserModel();
+        //when
         userDao.save(userModel);
         long userId = userModel.getId();
+        User user = Helper.getNewUserByUserId(userId);
+        user.setName("Peter#Waltson");
+        //then
+        assertThat(userService.updateUserProfile(userId, user)).isEqualTo(false);
+    }
 
-        User user = new User();
-        user.setId(userId);
-        user.setName("Tim");
-        user.setGender(true);
-        user.setSchool("Jiaotong");
-        user.setMajor("Electronic");
-        user.setTel("12222");
+    @Test
+    public void should_updateUserProfile_return_false_when_given_invalid_tel() {
+        //given
+        UserModel userModel = Helper.getNewUserModel();
+        //when
+        userDao.save(userModel);
+        long userId = userModel.getId();
+        User user = Helper.getNewUserByUserId(userId);
+        user.setTel("invalidtel");
+        //then
+        assertThat(userService.updateUserProfile(userId, user)).isEqualTo(false);
+    }
 
+    @Test
+    public void should_updateUserProfile_return_false_when_given_invalid_school() {
+        //given
+        UserModel userModel = Helper.getNewUserModel();
+        //when
+        userDao.save(userModel);
+        long userId = userModel.getId();
+        User user = Helper.getNewUserByUserId(userId);
+        user.setSchool("This is a super long school name which is more than 64 characters.");
+        //then
+        assertThat(userService.updateUserProfile(userId, user)).isEqualTo(false);
+    }
+
+    @Test
+    public void should_updateUserProfile_return_false_when_given_invalid_major() {
+        //given
+        UserModel userModel = Helper.getNewUserModel();
+        //when
+        userDao.save(userModel);
+        long userId = userModel.getId();
+        User user = Helper.getNewUserByUserId(userId);
+        user.setMajor("This is a super long major name which is more than 64 characters.");
+        //then
         assertThat(userService.updateUserProfile(userId, user)).isEqualTo(false);
     }
 }
