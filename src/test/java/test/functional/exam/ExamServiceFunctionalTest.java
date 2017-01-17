@@ -4,7 +4,6 @@ import com.thoughtworks.gaia.GaiaApplication;
 import com.thoughtworks.gaia.common.constant.EnvProfile;
 import com.thoughtworks.gaia.common.exception.NotFoundException;
 import com.thoughtworks.gaia.exam.dao.ExamDao;
-import com.thoughtworks.gaia.exam.entity.Exam;
 import com.thoughtworks.gaia.exam.model.ExamModel;
 import com.thoughtworks.gaia.exam.service.ExamService;
 import org.joda.time.DateTime;
@@ -57,12 +56,9 @@ public class ExamServiceFunctionalTest {
         exammodel.setName("test1");
         exammodel.setTimeCreated(DateTime.now().toDate());
         examDao.save(exammodel);
-
-        long examid = exammodel.getId();
-        long newexamid = examService.getExam(examid).getId();
         //when
         //then
-        Assert.assertEquals(examid, newexamid);
+        Assert.assertEquals((long) exammodel.getId(), (long) examService.getExam(exammodel.getId()).getId());
     }
 
     @Test
