@@ -10,8 +10,11 @@ import io.swagger.annotations.ApiResponses;
 import io.swagger.jaxrs.PATCH;
 import org.springframework.beans.InvalidPropertyException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -26,62 +29,64 @@ public class UserEndPoint {
     @Autowired
     private UserService userService;
 
-    @Path("/{user_id}/profile")
+    @Path("/{user_id}")
     @ApiOperation(value = "Get user by id", response = User.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Get user successfully"),
-            @ApiResponse(code = 404, message = "No user matches given id")
+            @ApiResponse(code = 404, message = "User not found with ID xxxx")
     })
-
     @GET
     public Response getUser(@PathParam("user_id") Long userId) {
         try{
-            User user = userService.getUser(userId);
-            return Response.ok().entity(user).build();
+            User user = userService.getUserById(userId);
+            return Response.status(200).entity(user).build();
         }
         catch (com.thoughtworks.gaia.common.exception.NotFoundException ex) {
-            return Response.ok().entity("User Not Found!").build();
+            return Response.status(404).entity("User not found with ID " + userId).build();
         }
     }
 
     @Path("/{user_id}/profile")
     @ApiOperation(value = "Patch user profile", response = String.class)
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Success"),
-            @ApiResponse(code = 400, message = "Bad Request"),
-            @ApiResponse(code = 404, message = "Bad Request")
+            @ApiResponse(code = 200, message = "Patch user successfully"),
+            @ApiResponse(code = 402, message = "Illegal parameter detected"),
+            @ApiResponse(code = 404, message = "User not found with ID xxxx")
     })
-
     @PATCH
     public Response patchUserProfile(@PathParam("user_id") Long userId, @RequestBody User user) {
+        boolean result = false;
         try {
-            userService.updateUserProfile(userId, user);
+            result = userService.updateUserProfile(userId, user);
         } catch (NotFoundException e) {
-            Response.status(404).entity("Not Found");
+            return Response.status(404).entity("User not found with ID " + userId).build();
         }
-
-        return Response.ok().entity("Successfully updated user profile without errors").build();
+        if (result) {
+            return Response.status(200).entity("Patch user profile successfully").build();
+        }
+        else {
+            return Response.status(402).entity("Illegal parameter detected").build();
+        }
     }
 
     @Path("/adduser")
     @ApiOperation(value = "Add a new user", response = String.class)
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Success"),
-            @ApiResponse(code = 402, message = "Bad Request"),
-            @ApiResponse(code = 402, message = "Bad Request")
+            @ApiResponse(code = 200, message = "Add user successfully"),
+            @ApiResponse(code = 402, message = "Illegal parameter detected"),
+            @ApiResponse(code = 403, message = "User account exists")
     })
-
     @POST
     public Response addUser(@RequestBody User user) {
+        int statusCode = 200;
         try {
             userService.addUser(user.getEmail(), user.getPassword());
-        } catch (InvalidPropertyException e) {
-            Response.status(402).entity(e.getMessage());
+        } catch (InvalidPropertyException ex) {
+            return Response.status(402).entity(ex.getMessage()).build();
         }
-        catch (JavaBeanConverter.DuplicatePropertyException e) {
-            Response.status(403).entity(e.getMessage());
+        catch (JavaBeanConverter.DuplicatePropertyException ex) {
+            return Response.status(403).entity(ex.getMessage()).build();
         }
-
         return Response.ok().build();
     }
 }

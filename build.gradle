@@ -72,6 +72,8 @@ dependencies {
     testCompile "junit:junit"
     testCompile("com.h2database:h2")
     testCompile "org.mockito:mockito-core:1.+"
+    testCompile 'com.jayway.restassured:rest-assured:2.9.0'
+    testCompile 'com.jayway.restassured:spring-mock-mvc:2.9.0'
     testCompile("org.springframework.boot:spring-boot-starter-test")
 
     testCompile libraries.assertj_core
