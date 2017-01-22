@@ -6,5 +6,5 @@ CREATE TABLE `user_exam_question` (
   `is_correct` bit DEFAULT NULL,
   `time_created` datetime DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
-  CONSTRAINT fk_user_exam FOREIGN KEY (user_exam_id) REFERENCES user_exam(id)
+  CONSTRAINT fk_user_exam_id FOREIGN KEY (user_exam_id) REFERENCES user_exam(`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

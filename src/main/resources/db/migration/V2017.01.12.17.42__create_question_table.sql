@@ -5,5 +5,5 @@ CREATE TABLE `question` (
   `result` varchar(512) DEFAULT NULL,
   `time_created` datetime DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
-  CONSTRAINT fk_question_type FOREIGN KEY (type_id) REFERENCES question_type(id)
+  CONSTRAINT fk_question_type_id FOREIGN KEY (type_id) REFERENCES question_type(`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

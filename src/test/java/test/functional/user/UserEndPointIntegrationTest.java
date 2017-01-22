@@ -3,27 +3,18 @@ package test.functional.user;
 import com.jayway.restassured.RestAssured;
 import com.thoughtworks.gaia.GaiaApplication;
 import com.thoughtworks.gaia.common.constant.EnvProfile;
-import com.thoughtworks.gaia.common.exception.NotFoundException;
-import com.thoughtworks.gaia.user.service.UserService;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.IntegrationTest;
 import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
-import org.springframework.transaction.annotation.Transactional;
-import sun.net.www.HeaderParser;
 import test.functional.Helper;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import static com.jayway.restassured.RestAssured.given;
 import static org.hamcrest.core.IsEqual.equalTo;
@@ -34,7 +25,7 @@ import static org.hamcrest.core.IsEqual.equalTo;
 @IntegrationTest("server.port:0")
 @ActiveProfiles({EnvProfile.TEST})
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class UserEndPointFunctionTest {
+public class UserEndPointIntegrationTest {
     @Value("${local.server.port}")
     private int serverPort;
 
@@ -45,16 +36,13 @@ public class UserEndPointFunctionTest {
     }
 
     @Test
-    public void should_addUser_return_status_code_200() {
+    public void a_should_addUser_return_status_code_200() {
         given().
                 contentType("application/json").
-                body(Helper.getUserMap(Helper.getValidEmail(),
-                        Helper.getValidPassword(),
-                        "",
-                        true,
-                        "",
-                        "",
-                        "")).
+                body(Helper.getUserMap(
+                        Helper.defaultEmail,
+                        Helper.defaultPassword
+                )).
         when().
                 post("/adduser").
         then().
@@ -62,50 +50,41 @@ public class UserEndPointFunctionTest {
     }
 
     @Test
-    public void should_addUser_return_status_code_402_when_given_invalid_email() {
+    public void a_should_addUser_return_status_code_402_when_given_invalid_email() {
         given().
                 contentType("application/json").
-                body(Helper.getUserMap(Helper.getInvalidEmail(),
-                        Helper.getValidPassword(),
-                        "",
-                        true,
-                        "",
-                        "",
-                        "")).
-                when().
+                body(Helper.getUserMap(
+                        Helper.invalidEmail,
+                        Helper.defaultPassword
+                )).
+        when().
                 post("/adduser").
-                then().
+        then().
                 statusCode(402);
     }
 
     @Test
-    public void should_addUser_return_status_code_402_when_given_empty_password() {
+    public void a_should_addUser_return_status_code_402_when_given_empty_password() {
         given().
                 contentType("application/json").
-                body(Helper.getUserMap(Helper.getValidEmail(),
-                        "",
-                        "",
-                        true,
-                        "",
-                        "",
-                        "")).
-                when().
+                body(Helper.getUserMap(
+                        Helper.defaultEmail,
+                        ""
+                )).
+        when().
                 post("/adduser").
-                then().
+        then().
                 statusCode(402);
     }
 
     @Test
-    public void should_addUser_return_status_code_403_when_given_existing_user() {
+    public void a_should_addUser_return_status_code_403_when_given_existing_user() {
         given().
                 contentType("application/json").
-                body(Helper.getUserMap(Helper.getValidEmail(),
-                        Helper.getValidPassword(),
-                        "",
-                        true,
-                        "",
-                        "",
-                        "")).
+                body(Helper.getUserMap(
+                        Helper.defaultEmail,
+                        Helper.defaultPassword
+                )).
         when().
                 post("/adduser").
         then().
@@ -113,23 +92,33 @@ public class UserEndPointFunctionTest {
     }
 
     @Test
-    public void should_getUser_return_status_code_404_when_given_nonexisting_userId() {
-        given().pathParam("userId", Helper.getNonExistingUserId()).when().get("/{userId}").then().statusCode(404);
+    public void b_should_getUser_return_status_code_404_when_given_nonexisting_userId() {
+        given().pathParam("userId", Helper.nonExistingUserId).when().get("/{userId}").then().statusCode(404);
     }
 
     @Test
-    public void should_getUser_return_status_code_200_when_given_existing_userId() {
+    public void b_should_getUser_return_status_code_200_when_given_existing_userId() {
         given().pathParam("userId", 1L).when().get("/{userId}").then().statusCode(200);
     }
 
     @Test
-    public void should_patchUserProfile_return_status_code_200() {
+    public void c_should_getUserProfile_return_status_code_404_when_given_nonexisting_userId() {
+        given().pathParam("userId", Helper.nonExistingUserId).when().get("/{userId}/profile").then().statusCode(404);
+    }
+
+    @Test
+    public void c_should_getUserProfile_return_status_code_200_when_given_existing_userId() {
+        given().pathParam("userId", 1L).when().get("/{userId}/profile").then().statusCode(200);
+    }
+
+    @Test
+    public void d_should_patchUserProfile_return_status_code_200() {
         //given
         //when
         given().
                 pathParam("userId", 1L).
                 when().
-                get("/{userId}").
+                get("/{userId}/profile").
         then().
                 body("name", equalTo(null)).
                 body("gender", equalTo(true)).
@@ -140,13 +129,13 @@ public class UserEndPointFunctionTest {
         given().
                 pathParam("userId", 1L).
                 contentType("application/json").
-                body(Helper.getUserMap("",
-                        "",
+                body(Helper.getUserProfileMap(
                         Helper.defaultName,
                         Helper.defaultGender,
                         Helper.defaultSchool,
                         Helper.defaultMajor,
-                        Helper.defaultTel)).
+                        Helper.defaultTel
+                )).
         when().
                 patch("/{userId}/profile").
         then().
@@ -154,7 +143,7 @@ public class UserEndPointFunctionTest {
         given().
                 pathParam("userId", 1L).
         when().
-                get("/{userId}").
+                get("/{userId}/profile").
         then().
                 body("name", equalTo(Helper.defaultName)).
                 body("gender", equalTo(Helper.defaultGender)).
@@ -164,17 +153,17 @@ public class UserEndPointFunctionTest {
     }
 
     @Test
-    public void should_patchUserProfile_return_status_code_402_when_given_invalid_name() {
+    public void d_should_patchUserProfile_return_status_code_402_when_given_invalid_name() {
         given().
                 pathParam("userId", 1L).
                 contentType("application/json").
-                body(Helper.getUserMap("",
-                        "",
+                body(Helper.getUserProfileMap(
                         "Peter#Waltson",
                         Helper.defaultGender,
                         Helper.defaultSchool,
                         Helper.defaultMajor,
-                        Helper.defaultTel)).
+                        Helper.defaultTel
+                )).
         when().
                 patch("/{userId}/profile").
         then().
@@ -182,23 +171,23 @@ public class UserEndPointFunctionTest {
         given().
                 pathParam("userId", 1L).
         when().
-                get("/{userId}").
+                get("/{userId}/profile").
         then().
                 body("name", equalTo(Helper.defaultName));
     }
 
     @Test
-    public void should_patchUserProfile_return_status_code_402_when_given_invalid_school() {
+    public void d_should_patchUserProfile_return_status_code_402_when_given_invalid_school() {
         given().
                 pathParam("userId", 1L).
                 contentType("application/json").
-                body(Helper.getUserMap("",
-                        "",
+                body(Helper.getUserProfileMap(
                         Helper.defaultName,
                         Helper.defaultGender,
                         "This is a super long school name which is more than 64 characters.",
                         Helper.defaultMajor,
-                        Helper.defaultTel)).
+                        Helper.defaultTel
+                )).
         when().
                 patch("/{userId}/profile").
         then().
@@ -206,23 +195,23 @@ public class UserEndPointFunctionTest {
         given().
                 pathParam("userId", 1L).
         when().
-                get("/{userId}").
+                get("/{userId}/profile").
         then().
                 body("school", equalTo(Helper.defaultSchool));
     }
 
     @Test
-    public void should_patchUserProfile_return_status_code_402_when_given_invalid_major() {
+    public void d_should_patchUserProfile_return_status_code_402_when_given_invalid_major() {
         given().
                 pathParam("userId", 1L).
                 contentType("application/json").
-                body(Helper.getUserMap("",
-                        "",
+                body(Helper.getUserProfileMap(
                         Helper.defaultName,
                         Helper.defaultGender,
                         Helper.defaultSchool,
                         "This is a super long major name which is more than 64 characters.",
-                        Helper.defaultTel)).
+                        Helper.defaultTel
+                )).
         when().
                 patch("/{userId}/profile").
         then().
@@ -230,23 +219,23 @@ public class UserEndPointFunctionTest {
         given().
                 pathParam("userId", 1L).
         when().
-                get("/{userId}").
+                get("/{userId}/profile").
         then().
                 body("major", equalTo(Helper.defaultMajor));
     }
 
     @Test
-    public void should_patchUserProfile_return_status_code_402_when_given_invalid_tel() {
+    public void d_should_patchUserProfile_return_status_code_402_when_given_invalid_tel() {
         given().
                 pathParam("userId", 1L).
                 contentType("application/json").
-                body(Helper.getUserMap("",
-                        "",
+                body(Helper.getUserProfileMap(
                         Helper.defaultName,
                         Helper.defaultGender,
                         Helper.defaultSchool,
                         Helper.defaultMajor,
-                        "invalidTel")).
+                        "invalidTel"
+                )).
                 when().
                 patch("/{userId}/profile").
                 then().
@@ -254,8 +243,81 @@ public class UserEndPointFunctionTest {
         given().
                 pathParam("userId", 1L).
         when().
-                get("/{userId}").
+                get("/{userId}/profile").
         then().
                 body("tel", equalTo(Helper.defaultTel));
+    }
+
+    @Test
+    public void e_should_loginUser_return_statusCode_402_when_given_invalid_email() {
+        given().
+                contentType("application/json").
+                body(Helper.getUserMap(
+                        Helper.invalidEmail,
+                        Helper.defaultPassword
+                )).
+        when().
+                post("/login").
+        then().
+                statusCode(402);
+    }
+    
+    @Test
+    public void e_should_loginUser_return_statusCode_404_when_given_nonexisting_user() {
+        given().
+                contentType("application/json").
+                body(Helper.getUserMap(
+                        Helper.nonExistingEmail,
+                        Helper.defaultPassword
+                )).
+        when().
+                post("/login").
+        then().
+                statusCode(404);
+    }
+
+    @Test
+    public void e_should_loginUser_return_statusCode_402_when_given_empty_password() {
+        given().
+                contentType("application/json").
+                body(Helper.getUserMap(
+                        Helper.defaultEmail,
+                        ""
+                )).
+        when().
+                post("/login").
+        then().
+                statusCode(402);
+    }
+    
+    @Test
+    public void e_should_loginUser_return_statusCode_200() {
+        given().
+                contentType("application/json").
+                body(Helper.getUserMap(
+                        Helper.defaultEmail,
+                        Helper.defaultPassword
+                )).
+        when().
+                post("/login").
+        then().
+                statusCode(200).
+                body("id", equalTo(1)).
+                body("email", equalTo(Helper.defaultEmail)).
+                body("password", equalTo(Helper.defaultPassword));
+    }
+
+    @Test
+    public void e_should_loginUser_return_statusCode_403_when_given_incorrect_password() {
+        given().
+                contentType("application/json").
+                body(Helper.getUserMap(
+                        Helper.defaultEmail,
+                        "incorrectpassword"
+                )).
+                when().
+                post("/login").
+                then().
+                statusCode(403);
     }
 }

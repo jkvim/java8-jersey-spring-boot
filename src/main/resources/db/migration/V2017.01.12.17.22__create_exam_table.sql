@@ -6,5 +6,5 @@ CREATE TABLE `exam` (
   `status_type_id` bigint NOT NULL,
   `time_created` datetime DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
-  CONSTRAINT fk_exam_status_type FOREIGN KEY (status_type_id) REFERENCES exam_status_type(id)
+  CONSTRAINT fk_exam_status_type_id FOREIGN KEY (status_type_id) REFERENCES exam_status_type(`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

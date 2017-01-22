@@ -10,7 +10,6 @@ import java.util.Date;
 @Entity
 @Table(name = "user_exam")
 public class UserExamModel extends IdBaseModel {
-
     @Column(name = "user_id", nullable = false, updatable = false)
     private Long userId;
 

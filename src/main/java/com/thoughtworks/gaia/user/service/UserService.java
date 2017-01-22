@@ -5,10 +5,13 @@ import com.thoughtworks.gaia.common.Loggable;
 import com.thoughtworks.gaia.common.exception.NotFoundException;
 import com.thoughtworks.gaia.user.UserMapper;
 import com.thoughtworks.gaia.user.dao.UserDao;
+import com.thoughtworks.gaia.user.dao.UserProfileDao;
 import com.thoughtworks.gaia.user.dao.UserTypeDao;
 import com.thoughtworks.gaia.user.entity.User;
+import com.thoughtworks.gaia.user.entity.UserProfile;
 import com.thoughtworks.gaia.user.model.UserModel;
-import com.thoughtworks.xstream.converters.javabean.JavaBeanConverter;
+import com.thoughtworks.gaia.user.model.UserProfileModel;
+import com.thoughtworks.xstream.converters.javabean.JavaBeanConverter.DuplicatePropertyException;
 import org.springframework.beans.InvalidPropertyException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -24,9 +27,12 @@ public class UserService implements Loggable {
     private UserDao userDao;
 
     @Autowired
+    private UserProfileDao userProfileDao;
+
+    @Autowired
     private UserTypeDao userTypeDao;
 
-    public User getUserById(Long userId) {
+    public User getUserById(Long userId) throws NotFoundException {
         UserModel userModel = userDao.idEquals(userId).querySingle();
         if (userModel == null) {
             error("User not found with ID " + userId);
@@ -35,12 +41,8 @@ public class UserService implements Loggable {
         return mapper.map(userModel, User.class);
     }
 
-    public User getUserByEmail(String email) {
-        if (!Helper.isValidEmail(email)) {
-            String error = "Email " + email + " is not valid";
-            error(error);
-            throw new InvalidPropertyException(String.class, "email", error);
-        }
+    public User getUserByEmail(String email) throws NotFoundException, InvalidPropertyException {
+        validateEmail(email);
         UserModel userModel = userDao.getUserByEmail(email);
         if (userModel == null) {
             error("User not found with email " + email);
@@ -49,51 +51,89 @@ public class UserService implements Loggable {
         return mapper.map(userModel, User.class);
     }
 
-    public boolean updateUserProfile(Long userId, User user) {
+    public UserProfile getUserProfileById(Long userId) throws NotFoundException {
+        UserProfileModel userProfileModel = userProfileDao.idEquals(userId).querySingle();
+        if (userProfileModel == null) {
+            error("User profile not found with ID " + userId);
+            throw new NotFoundException();
+        }
+        return mapper.map(userProfileModel, UserProfile.class);
+    }
+
+    public Boolean addUser(String email, String password) throws InvalidPropertyException, DuplicatePropertyException {
+        String error;
+        validateEmail(email);
+        validatePassword(password);
+        UserModel userModel = userDao.getUserByEmail(email);
+        if (userModel != null) {
+            error = "User email " + email + " exists";
+            error(error);
+            throw new DuplicatePropertyException(error);
+        }
+        userModel = new UserModel();
+        userModel.setUserTypeId(userTypeDao.findIdByUserType("student"));
+        userModel.setEmail(email);
+        userModel.setPassword("password");
+        userDao.save(userModel);
+
+        UserProfileModel userProfileModel = new UserProfileModel();
+        userProfileModel.setUserModel(userModel);
+        userProfileModel.setGender(Helper.defaultGender);
+        userProfileDao.save(userProfileModel);
+        return true;
+    }
+
+    public boolean updateUserProfile(Long userId, UserProfile user) throws NotFoundException {
         if (!Helper.isValidName(user.getName()) ||
                 !Helper.isValidTel(user.getTel()) ||
                 !Helper.isValidSchool(user.getSchool()) ||
                 !Helper.isValidMajor(user.getMajor())) {
             return false;
         }
-        UserModel userModel = userDao.idEquals(userId).querySingle();
-        if (userModel == null) {
+        UserProfileModel userProfileModel = userProfileDao.idEquals(userId).querySingle();
+        if (userProfileModel == null) {
             error("User not found with ID " + userId);
             throw new NotFoundException();
         }
-        userModel.setName(user.getName());
-        userModel.setGender(user.getGender());
-        userModel.setTel(user.getTel());
-        userModel.setSchool(user.getSchool());
-        userModel.setMajor(user.getMajor());
-        userDao.update(userModel);
+        userProfileModel.setName(user.getName());
+        userProfileModel.setGender(user.getGender());
+        userProfileModel.setTel(user.getTel());
+        userProfileModel.setSchool(user.getSchool());
+        userProfileModel.setMajor(user.getMajor());
+        userProfileDao.update(userProfileModel);
         return true;
     }
 
-    public Boolean addUser(String email, String password) {
+    public User loginUser(String email, String password) throws InvalidPropertyException, DuplicatePropertyException {
         String error;
+        validateEmail(email);
+        validatePassword(password);
+        UserModel userModel = userDao.getUserByEmail(email);
+        if (userModel == null) {
+            error = "User not found with email " + email;
+            error(error);
+            throw new NotFoundException();
+        }
+        if (userModel.getPassword().equals(password)) {
+            return mapper.map(userModel, User.class);
+        } else {
+            return null;
+        }
+    }
+
+    private void validateEmail(String email) throws InvalidPropertyException {
         if (!Helper.isValidEmail(email)) {
-            error = "Email " + email + " is not valid";
+            String error = "Email " + email + " is not valid";
             error(error);
             throw new InvalidPropertyException(String.class, "email", error);
         }
-        if (password == "") {
-            error = "Empty password detected";
+    }
+
+    private void validatePassword(String password) throws InvalidPropertyException {
+        if (password.isEmpty()) {
+            String error = "Empty password detected";
             error(error);
             throw new InvalidPropertyException(String.class, "password", error);
         }
-        UserModel userModel = userDao.getUserByEmail(email);
-        if (userModel != null) {
-            error = "User email " + email + " exists";
-            error(error);
-            throw new JavaBeanConverter.DuplicatePropertyException(error);
-        }
-        userModel = new UserModel();
-        userModel.setUserTypeId(userTypeDao.findIdByUserType("student"));
-        userModel.setEmail(email);
-        userModel.setPassword("password");
-        userModel.setGender(true);
-        userDao.save(userModel);
-        return true;
     }
 }
