@@ -62,11 +62,20 @@ public class Helper {
         return userProfileMap;
     }
 
+    public static Map getUserPasswordMap(Long userId, String oldpassword, String newpassword) {
+        Map<String, Object> userPasswordMap = new HashMap<String, Object>();
+        userPasswordMap.put("id", userId);
+        userPasswordMap.put("oldPassword", oldpassword != null ? oldpassword : defaultPassword);
+        userPasswordMap.put("newPassword", newpassword != null ? newpassword : defaultNewPassword);
+        return userPasswordMap;
+    }
+
     public final static String nonExistingEmail = "null@thoughtworks.com";
     public final static String invalidEmail = "@invalidemail.com";
     public final static Long nonExistingUserId = 0L;
     public final static String defaultEmail = "peterwaltson@thoughtworks.com";
     public final static String defaultPassword = "password";
+    public final static String defaultNewPassword = "newpassword";
     public final static String defaultName = "Peter Waltson";
     public final static boolean defaultGender = true;
     public final static String defaultSchool = "Peking University";

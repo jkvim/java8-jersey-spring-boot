@@ -6,6 +6,7 @@ import com.thoughtworks.gaia.common.constant.EnvProfile;
 import com.thoughtworks.gaia.user.dao.UserDao;
 import com.thoughtworks.gaia.user.dao.UserProfileDao;
 import com.thoughtworks.gaia.user.entity.User;
+import com.thoughtworks.gaia.user.entity.UserPassword;
 import com.thoughtworks.gaia.user.entity.UserProfile;
 import com.thoughtworks.gaia.user.model.UserModel;
 import com.thoughtworks.gaia.user.model.UserProfileModel;
@@ -21,6 +22,8 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 import test.functional.Helper;
+
+import javax.ws.rs.ForbiddenException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -246,5 +249,55 @@ public class UserServiceFunctionTest {
         User user = userService.loginUser(Helper.defaultEmail, "abc");
         //then
         assertThat(user).isEqualTo(null);
+    }
+
+    @Test(expected = NotFoundException.class)
+    public void should_changePassword_throw_exception_when_given_nonexisting_id() {
+        userService.changePassword(Helper.nonExistingUserId, Helper.defaultPassword, "newpassword");
+    }
+
+    @Test(expected = InvalidPropertyException.class)
+    public void should_changePassword_throw_exception_when_given_empty_newpassword() {
+        //given
+        UserModel userModel = Helper.getUserModelbyUsernameAndPassword(Helper.defaultEmail, Helper.defaultPassword);
+        //when
+        userDao.save(userModel);
+        userService.changePassword(userModel.getId(), Helper.defaultPassword, "");
+        //then
+    }
+
+    @Test
+    public void should_changePassword_return_mapped_user() {
+        //given
+        UserModel userModel = Helper.getUserModelbyUsernameAndPassword(Helper.defaultEmail, Helper.defaultPassword);
+        //when
+        userDao.save(userModel);
+        Long expectedUserId = userModel.getId();
+        User user = userService.changePassword(expectedUserId, Helper.defaultPassword, Helper.defaultNewPassword);
+        //then
+        assertThat(user.getId()).isEqualTo(expectedUserId);
+        assertThat(user.getPassword()).isEqualTo(Helper.defaultNewPassword);
+    }
+
+    @Test(expected = ForbiddenException.class)
+    public void should_changePassword_throw_exception_when_given_incorrect_oldpassword() {
+        //given
+        UserModel userModel = Helper.getUserModelbyUsernameAndPassword(Helper.defaultEmail, Helper.defaultPassword);
+        //when
+        userDao.save(userModel);
+        Long UserId = userModel.getId();
+        //then
+        userService.changePassword(UserId, "incorrectpassword", Helper.defaultPassword);
+    }
+
+    @Test(expected = InvalidPropertyException.class)
+    public void should_changePassword_throw_exception_when_given_same_passwords() {
+        //given
+        UserModel userModel = Helper.getUserModelbyUsernameAndPassword(Helper.defaultEmail, Helper.defaultPassword);
+        //when
+        userDao.save(userModel);
+        Long UserId = userModel.getId();
+        //then
+        userService.changePassword(UserId, Helper.defaultPassword, Helper.defaultPassword);
     }
 }

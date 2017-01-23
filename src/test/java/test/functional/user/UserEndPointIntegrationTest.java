@@ -114,9 +114,11 @@ public class UserEndPointIntegrationTest {
     @Test
     public void d_should_patchUserProfile_return_status_code_200() {
         //given
+        Long userId = 1L;
         //when
+        //then
         given().
-                pathParam("userId", 1L).
+                pathParam("userId", userId).
                 when().
                 get("/{userId}/profile").
         then().
@@ -125,9 +127,8 @@ public class UserEndPointIntegrationTest {
                 body("school", equalTo(null)).
                 body("major", equalTo(null)).
                 body("tel", equalTo(null));
-        //then
         given().
-                pathParam("userId", 1L).
+                pathParam("userId", userId).
                 contentType("application/json").
                 body(Helper.getUserProfileMap(
                         Helper.defaultName,
@@ -141,7 +142,7 @@ public class UserEndPointIntegrationTest {
         then().
                 statusCode(200);
         given().
-                pathParam("userId", 1L).
+                pathParam("userId", userId).
         when().
                 get("/{userId}/profile").
         then().
@@ -154,8 +155,11 @@ public class UserEndPointIntegrationTest {
 
     @Test
     public void d_should_patchUserProfile_return_status_code_402_when_given_invalid_name() {
+        //given
+        Long userId = 1L;
+        //when
         given().
-                pathParam("userId", 1L).
+                pathParam("userId", userId).
                 contentType("application/json").
                 body(Helper.getUserProfileMap(
                         "Peter#Waltson",
@@ -168,8 +172,9 @@ public class UserEndPointIntegrationTest {
                 patch("/{userId}/profile").
         then().
                 statusCode(402);
+        //then
         given().
-                pathParam("userId", 1L).
+                pathParam("userId", userId).
         when().
                 get("/{userId}/profile").
         then().
@@ -178,8 +183,11 @@ public class UserEndPointIntegrationTest {
 
     @Test
     public void d_should_patchUserProfile_return_status_code_402_when_given_invalid_school() {
+        //given
+        Long userId = 1L;
+        //when
         given().
-                pathParam("userId", 1L).
+                pathParam("userId", userId).
                 contentType("application/json").
                 body(Helper.getUserProfileMap(
                         Helper.defaultName,
@@ -192,8 +200,9 @@ public class UserEndPointIntegrationTest {
                 patch("/{userId}/profile").
         then().
                 statusCode(402);
+        //then
         given().
-                pathParam("userId", 1L).
+                pathParam("userId", userId).
         when().
                 get("/{userId}/profile").
         then().
@@ -202,8 +211,11 @@ public class UserEndPointIntegrationTest {
 
     @Test
     public void d_should_patchUserProfile_return_status_code_402_when_given_invalid_major() {
+        //given
+        Long userId = 1L;
+        //when
         given().
-                pathParam("userId", 1L).
+                pathParam("userId", userId).
                 contentType("application/json").
                 body(Helper.getUserProfileMap(
                         Helper.defaultName,
@@ -216,8 +228,9 @@ public class UserEndPointIntegrationTest {
                 patch("/{userId}/profile").
         then().
                 statusCode(402);
+        //then
         given().
-                pathParam("userId", 1L).
+                pathParam("userId", userId).
         when().
                 get("/{userId}/profile").
         then().
@@ -226,8 +239,11 @@ public class UserEndPointIntegrationTest {
 
     @Test
     public void d_should_patchUserProfile_return_status_code_402_when_given_invalid_tel() {
+        //given
+        Long userId = 1L;
+        //when
         given().
-                pathParam("userId", 1L).
+                pathParam("userId", userId).
                 contentType("application/json").
                 body(Helper.getUserProfileMap(
                         Helper.defaultName,
@@ -240,8 +256,9 @@ public class UserEndPointIntegrationTest {
                 patch("/{userId}/profile").
                 then().
                 statusCode(402);
+        //then
         given().
-                pathParam("userId", 1L).
+                pathParam("userId", userId).
         when().
                 get("/{userId}/profile").
         then().
@@ -317,6 +334,109 @@ public class UserEndPointIntegrationTest {
                 )).
                 when().
                 post("/login").
+                then().
+                statusCode(403);
+    }
+    
+    @Test
+    public void f_should_patchUserPassword_return_statusCode_404_when_given_nonexisting_id() {
+        //given
+        Long userId = Helper.nonExistingUserId;
+        //when
+        //then
+        given().
+                pathParam("userId", userId).
+                contentType("application/json").
+                body(Helper.getUserPasswordMap(
+                        userId,
+                        Helper.defaultPassword,
+                        Helper.defaultNewPassword
+                )).
+        when().
+                patch("/{userId}/password").
+        then().
+                statusCode(404);
+    }
+
+    @Test
+    public void f_should_patchUserPassword_return_statusCode_402_when_given_empty_newpassword() {
+        //given
+        Long userId = 1L;
+        //when
+        //then
+        given().
+                pathParam("userId", userId).
+                contentType("application/json").
+                body(Helper.getUserPasswordMap(
+                        userId,
+                        Helper.defaultPassword,
+                        ""
+                )).
+        when().
+                patch("/{userId}/password").
+        then().
+                statusCode(402);
+    }
+
+    @Test
+    public void f_should_patchUserPassword_return_statusCode_200() {
+        //given
+        Long userId = 1L;
+        //when
+        //then
+        given().
+                pathParam("userId", userId).
+                contentType("application/json").
+                body(Helper.getUserPasswordMap(
+                        userId,
+                        Helper.defaultPassword,
+                        Helper.defaultNewPassword
+                )).
+                when().
+                patch("/{userId}/password").
+                then().
+                body("id", equalTo(userId.intValue())).
+                body("email", equalTo(Helper.defaultEmail)).
+                body("password", equalTo(Helper.defaultNewPassword)).
+                statusCode(200);
+    }
+
+    @Test
+    public void f_should_patchUserPassword_return_statusCode_402_when_given_same_passwords() {
+        //given
+        Long userId = 1L;
+        //when
+        //then
+        given().
+                pathParam("userId", userId).
+                contentType("application/json").
+                body(Helper.getUserPasswordMap(
+                        userId,
+                        Helper.defaultNewPassword,
+                        Helper.defaultNewPassword
+                )).
+                when().
+                patch("/{userId}/password").
+                then().
+                statusCode(402);
+    }
+
+    @Test
+    public void f_should_patchUserPassword_return_statusCode_403_when_given_incorrect_oldpassword() {
+        //given
+        Long userId = 1L;
+        //when
+        //then
+        given().
+                pathParam("userId", userId).
+                contentType("application/json").
+                body(Helper.getUserPasswordMap(
+                        userId,
+                        Helper.defaultPassword,
+                        Helper.defaultNewPassword
+                )).
+                when().
+                patch("/{userId}/password").
                 then().
                 statusCode(403);
     }

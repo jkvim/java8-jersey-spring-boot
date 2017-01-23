@@ -20,19 +20,19 @@ public class UserProfileModel {
     )
     private Long id;
 
-    @Column(name = "name", nullable = true, length = 64)
+    @Column(name = "name", length = 64)
     private String name;
 
     @Column(name = "gender")
     private boolean gender;
 
-    @Column(name = "tel", nullable = true, length = 11)
+    @Column(name = "tel", length = 11)
     private String tel;
 
-    @Column(name = "school", nullable = true, length = 64)
+    @Column(name = "school", length = 64)
     private String school;
 
-    @Column(name = "major", nullable = true, length = 64)
+    @Column(name = "major", length = 64)
     private String major;
 
     @Column(name = "time_created", nullable = false, updatable = false)

@@ -8,6 +8,7 @@ import com.thoughtworks.gaia.user.dao.UserDao;
 import com.thoughtworks.gaia.user.dao.UserProfileDao;
 import com.thoughtworks.gaia.user.dao.UserTypeDao;
 import com.thoughtworks.gaia.user.entity.User;
+import com.thoughtworks.gaia.user.entity.UserPassword;
 import com.thoughtworks.gaia.user.entity.UserProfile;
 import com.thoughtworks.gaia.user.model.UserModel;
 import com.thoughtworks.gaia.user.model.UserProfileModel;
@@ -16,6 +17,9 @@ import org.springframework.beans.InvalidPropertyException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.ws.rs.ForbiddenException;
+import java.util.Map;
 
 @Component
 @Transactional
@@ -119,6 +123,30 @@ public class UserService implements Loggable {
         } else {
             return null;
         }
+    }
+
+    public User changePassword(Long userId, String oldPassword, String newPassword) {
+        validatePassword(newPassword);
+        String error;
+        UserModel userModel = userDao.idEquals(userId).querySingle();
+        if (userModel == null) {
+            error = "User not found with ID " + userId;
+            error(error);
+            throw new NotFoundException();
+        }
+        if (oldPassword.equals(userModel.getPassword())) {
+            if (newPassword.equals(oldPassword)) {
+                error = "New password cannot be the same as old password";
+                error(error);
+                throw new InvalidPropertyException(String.class, "password", error);
+            }
+            userModel.setPassword(newPassword);
+        } else {
+            error = "Incorrect password";
+            error(error);
+            throw new ForbiddenException(error);
+        }
+        return mapper.map(userModel, User.class);
     }
 
     private void validateEmail(String email) throws InvalidPropertyException {
